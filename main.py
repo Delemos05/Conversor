@@ -50,6 +50,8 @@ def perform_operation(num1, num2, operation, base):
 st.set_page_config(page_title="Conversor de Sistemas Numéricos", page_icon="🧮", layout="centered")
 st.title("🧮 Conversor e Operador de Bases Numéricas")
 st.markdown("Converta entre **binário**, **decimal**, **octal** e **hexadecimal** e realize operações básicas!")
+st.markdown("Integrantes do Grupo: **Marcolino Lemos**, **Loide Padre**, **Zeferino** e **Mikhail Freire**")
+
 
 tabs = st.tabs(["🔁 Conversor", "➕ Operações"])
 
