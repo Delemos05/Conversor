@@ -1,9 +1,8 @@
 import streamlit as st
 from math import floor
+import base64
 
-
-
-# Configuração de estilo
+# Configuração de estilo (mantido igual)
 def set_bg_hack(main_bg):
     main_bg_ext = "png"
     
@@ -89,10 +88,58 @@ def set_bg_hack(main_bg):
             margin-top: 20px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }}
+        .stError {{
+            background-color: rgba(255, 204, 203, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+            border-left: 5px solid #ff3333;
+        }}
         </style>
         """,
         unsafe_allow_html=True
     )
+
+def is_valid_number(number, base):
+    """Verifica se o número é válido para a base especificada"""
+    base_dict = {"Binário": 2, "Decimal": 10, "Octal": 8, "Hexadecimal": 16}
+    current_base = base_dict[base]
+    
+    # Verifica se é número fracionário
+    if '.' in number:
+        integer_part, fraction_part = number.split('.')
+    else:
+        integer_part = number
+        fraction_part = None
+    
+    # Função auxiliar para verificar dígitos
+    def check_digits(part, part_name):
+        for digit in part:
+            if digit.isdigit():
+                digit_value = int(digit)
+            else:
+                digit = digit.upper()
+                if not ('A' <= digit <= 'F'):
+                    return f"Erro: Dígito '{digit}' inválido na parte {part_name}"
+                digit_value = 10 + ord(digit) - ord('A')
+            
+            if digit_value >= current_base:
+                return f"Erro: Dígito '{digit}' inválido para base {base} (máx: {current_base-1})"
+        return None
+    
+    # Verifica parte inteira
+    if integer_part:
+        error = check_digits(integer_part, "inteira")
+        if error:
+            return error
+    
+    # Verifica parte fracionária
+    if fraction_part:
+        error = check_digits(fraction_part, "fracionária")
+        if error:
+            return error
+    
+    return None
 
 def convert_fractional_part(fractional_part, base_from, base_to):
     """Converte a parte fracionária (0.xxx) entre bases"""
@@ -133,6 +180,11 @@ def convert_fractional_part(fractional_part, base_from, base_to):
 
 def convert_number(value, base_from, base_to):
     try:
+        # Verifica se o número é válido para a base de origem
+        validation_error = is_valid_number(value, base_from)
+        if validation_error:
+            return validation_error
+        
         base_dict = {"Binário": 2, "Decimal": 10, "Octal": 8, "Hexadecimal": 16}
         
         # Verifica se é número fracionário
@@ -169,6 +221,15 @@ def convert_number(value, base_from, base_to):
 def perform_operation(num1, num2, operation, base):
     base_dict = {"Binário": 2, "Decimal": 10, "Octal": 8, "Hexadecimal": 16}
     current_base = base_dict[base]
+    
+    # Verifica se os números são válidos para a base
+    validation_error1 = is_valid_number(num1, base)
+    validation_error2 = is_valid_number(num2, base)
+    
+    if validation_error1:
+        return validation_error1
+    if validation_error2:
+        return validation_error2
     
     def to_decimal(number, base):
         if '.' in number:
@@ -261,7 +322,10 @@ with tabs[0]:
 
     if st.button("Converter"):
         result = convert_number(value, base_from, base_to)
-        st.success(f"Resultado: {result}")
+        if result.startswith("Erro:"):
+            st.error(result)
+        else:
+            st.success(f"Resultado: {result}")
 
 # --- Operações ---
 with tabs[1]:
@@ -273,9 +337,7 @@ with tabs[1]:
 
     if st.button("Calcular"):
         result = perform_operation(num1, num2, operation, base)
-        st.success(f"Resultado: {result}")
-
-
-
-
-
+        if result.startswith("Erro:"):
+            st.error(result)
+        else:
+            st.success(f"Resultado: {result}")
