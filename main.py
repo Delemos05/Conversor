@@ -522,7 +522,7 @@ Particles.js (Efeito de partículas interativo)
             </div>
             <div style="margin-top: 1.5rem;">
                 <h3 style="color: #00ffff; border-bottom: 1px solid #00ffff; padding-bottom: 0.5rem;">
-                    EQUIPA
+                    SOBRE A EQUIPA
                 </h3>
                 <ul style="color: #aaa; list-style-type: none; padding-left: 0;">
                     <li>► Marcolino Lemos -> DEV BACK-END E CTO</li>
