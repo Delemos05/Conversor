@@ -494,7 +494,7 @@ with tabs[2]:
     with st.container():
         st.markdown("""
         <div class="neon-card">
-        
+        <h2>ABOUT</h2>
              <div style="margin-top: 1.5rem;">
                 <h3 style="color: #00ffff; border-bottom: 1px solid #00ffff; padding-bottom: 0.5rem;">
                     SOBRE O APP
